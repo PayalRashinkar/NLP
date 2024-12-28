@@ -1,0 +1,62 @@
+To get the output for 4 tasks, run the scripts as follows:
+
+Run:
+----
+python3 task1.py Output file: viterbi.text (run within data folder)
+python3 task2.py Output file: hmm.json (run within data folder)
+python3 task3.py Output file: greedy.out for test data (Takes around 2 to 3 hours to run but eventually gives output, run within data folder)
+python3 task4.py Output file: viterbi.out for test data (requires t_prob.obj and e_prob.obj to be present in the same path as the python script and a data folder containing dev and test file)
+
+data/ folder to be present in the same folder as the scripts.
+
+task1:
+------
+Description:
+This code defines a process for creating and saving a vocabulary from a training dataset:
+
+It loads words from a file, extracting a specific field from each line.
+It creates a vocabulary that includes words appearing at least a certain number of times, with a special entry for less frequent words marked as '<unk>'.
+It saves this vocabulary, including each word's occurrence count, to a new file, formatting each entry with the word, its index, and count.
+
+
+task2:
+------
+Description:
+This code constructs a Hidden Markov Model (HMM) from a training file, calculating and saving transition and emission probabilities:
+
+It reads a training file, counting state transitions and word emissions per state, to calculate transition and emission probabilities.
+Probabilities are computed as the count of specific transitions or emissions divided by the total counts of initial states for transitions and states for emissions.
+The model, including transition and emission probabilities, is saved to a JSON file, and a summary of the model's parameters is printed.
+
+task3:
+------
+Description:
+This code performs part-of-speech (POS) tagging on sentences using a pre-trained Hidden Markov Model (HMM) with greedy decoding:
+
+It loads HMM transition and emission probabilities from a JSON file, then reads sentences from a development (test) dataset.
+For each sentence, it applies a greedy decoding algorithm to predict POS tags based on the maximum probability of transition and emission probabilities, starting with an initial tag.
+The predicted POS tags for each sentence are written to an output file, with each word's predicted tag listed alongside it.
+
+task4:
+------
+Description:
+This script implements a POS tagger using the Viterbi algorithm. It operates in several steps:
+
+Initial Setup: It downloads the necessary NLTK data and sets up the tag list, including a special "UNK" tag for unknown words or tags.
+
+Reading Data: It reads training, testing, and development data from files. Data is expected in a specific format, where each line represents a word and its tag, separated by a tab, and sentences are separated by empty lines. The readFile function is designed to handle different file types (training, testing, development) accordingly.
+
+Data Preparation: The script combines sentences from the training data and separates words and tags to prepare for the model training. It also handles unknown tags by replacing them with "UNK".
+
+Probability Calculations:
+
+It loads pre-calculated transition probabilities (tags_transition_prob) and emission probabilities (emission_dict) from pickle files. These probabilities are essential for the Viterbi algorithm.
+Initial probabilities are calculated based on the first word of each sentence in the training data.
+Viterbi Algorithm: The core of the script. For each sentence in the test dataset, it:
+
+Initializes a probability matrix and a backpointer matrix to store the best paths.
+Fills in these matrices by iteratively calculating the best tag for each word based on the previous tag, using the loaded transition and emission probabilities.
+After processing all words in a sentence, it backtracks from the last word to the first word to find the best sequence of tags.
+Output: Finally, the predicted tags for each word in the test set are written to an output file (viterbi.out), formatted similarly to the input files, with each line containing a word and its predicted tag.
+
+This script combines several concepts from NLP and HMMs, including handling of sequential data, probabilistic modeling with HMMs, and dynamic programming with the Viterbi algorithm.
